@@ -85,49 +85,51 @@ export default function OrdemServicoFormPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="os-form">
-      <div className="form-header">
-        <button className="form-button" onClick={() => navigate("/ordens")}><FaArrowLeft></FaArrowLeft></button>
+    <div className="card">
+      <form onSubmit={handleSubmit} className="os-form">
+        <div className="form-header">
+          <button className="form-button" onClick={() => navigate("/ordens")}><FaArrowLeft></FaArrowLeft></button>
 
-        <h2>ORDEM DE SERVIÇO</h2>
+          <h2>ORDEM DE SERVIÇO</h2>
 
-        {isPut && <span>#{id}</span>}
-      </div>
+          {isPut && <span>#{id}</span>}
+        </div>
 
-      <div className="form-group">
-        <label>Cliente</label>
+        <div className="form-group">
+          <label>Cliente</label>
 
-        <select value={form.cliente_id} onChange={(e) => handleChange("cliente_id", e.target.value)} required>
-          <option value="">Selecione...</option>
+          <select value={form.cliente_id} onChange={(e) => handleChange("cliente_id", e.target.value)} required>
+            <option value="">Selecione...</option>
 
-          {clientes.map(cliente => (<option key={cliente.id} value={cliente.id} > {cliente.nome} </option>))}
-        </select>
-        {errors.cliente_id && (<small className="error"> {errors.cliente_id} </small>)}
-      </div>
+            {clientes.map(cliente => (<option key={cliente.id} value={cliente.id} > {cliente.nome} </option>))}
+          </select>
+          {errors.cliente_id && (<small className="error"> {errors.cliente_id} </small>)}
+        </div>
 
-      <div className="form-group">
-        <label>Descrição do problema</label>
+        <div className="form-group">
+          <label>Descrição do problema</label>
 
-        <textarea rows={5} value={form.descricao} onChange={(e) => handleChange("descricao", e.target.value)} required />
-        {errors.descricao && (<small className="error"> {errors.descricao} </small>)}
-      </div>
+          <textarea rows={5} value={form.descricao} onChange={(e) => handleChange("descricao", e.target.value)} required />
+          {errors.descricao && (<small className="error"> {errors.descricao} </small>)}
+        </div>
 
-      <div className="form-group">
-        <label>Valor</label>
+        <div className="form-group">
+          <label>Valor</label>
 
-        <input type="number" step="0.01" min="0" value={form.valor} onChange={(e) => handleChange("valor", e.target.value)} required />
-        {errors.valor && (<small className="error"> {errors.valor} </small>)}
-      </div>
+          <input type="number" step="0.01" min="0" value={form.valor} onChange={(e) => handleChange("valor", e.target.value)} required />
+          {errors.valor && (<small className="error"> {errors.valor} </small>)}
+        </div>
 
-      <div className="form-group">
-        <label>Situação</label>
+        <div className="form-group">
+          <label>Situação</label>
 
-        <input value={form.status} readOnly />
-      </div>
+          <input value={form.status} readOnly />
+        </div>
 
-      <div className="form-actions">
-        <button className="form-button" type="submit"> {isPut ? "Salvar" : "Cadastrar"}</button>
-      </div>
-    </form>
+        <div className="form-actions">
+          <button className="form-button" type="submit"> {isPut ? "Salvar" : "Cadastrar"}</button>
+        </div>
+      </form>
+    </div>
   );
 }

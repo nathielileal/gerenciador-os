@@ -81,43 +81,45 @@ export default function ClienteFormPage() {
   }
 
   return (
-    <form className="cliente-form" onSubmit={handleSubmit}>
-      <div className="form-header">
-        <button type="button" className="form-button" onClick={() => navigate("/clientes")}>
-          <FaArrowLeft />
-        </button>
+    <div className="card">
+      <form className="cliente-form" onSubmit={handleSubmit}>
+        <div className="form-header">
+          <button type="button" className="form-button" onClick={() => navigate("/clientes")}>
+            <FaArrowLeft />
+          </button>
 
-        <h2>CLIENTE</h2>
+          <h2>CLIENTE</h2>
 
-        {isPut ? <span>#{id}</span> : <span />}
-      </div>
+          {isPut ? <span>#{id}</span> : <span />}
+        </div>
 
-      <div className="form-group">
-        <label>Nome</label>
+        <div className="form-group">
+          <label>Nome</label>
 
-        <input value={form.nome} onChange={(e) => handleChange("nome", e.target.value)} required />
-        {errors.nome && (<small className="error"> {errors.nome} </small>)}
-      </div>
+          <input value={form.nome} onChange={(e) => handleChange("nome", e.target.value)} required />
+          {errors.nome && (<small className="error"> {errors.nome} </small>)}
+        </div>
 
-      <div className="form-group">
-        <label>E-mail</label>
+        <div className="form-group">
+          <label>E-mail</label>
 
-        <input type="email" value={form.email} onChange={(e) => handleChange("email", e.target.value)} placeholder="exemplo@dominio.com" required />
+          <input type="email" value={form.email} onChange={(e) => handleChange("email", e.target.value)} placeholder="exemplo@dominio.com" required />
 
-        {errors.email && (<small className="error"> {errors.email} </small>)}
-      </div>
+          {errors.email && (<small className="error"> {errors.email} </small>)}
+        </div>
 
-      <div className="form-group">
-        <label>Telefone</label>
+        <div className="form-group">
+          <label>Telefone</label>
 
-        <input value={form.telefone} onChange={(e) => handleChange("telefone", getPhoneFormat(e.target.value))} placeholder="(41) 99999-9999" required />
+          <input value={form.telefone} onChange={(e) => handleChange("telefone", getPhoneFormat(e.target.value))} placeholder="(41) 99999-9999" required />
 
-        {errors.telefone && (<small className="error"> {errors.telefone} </small>)}
-      </div>
+          {errors.telefone && (<small className="error"> {errors.telefone} </small>)}
+        </div>
 
-      <div className="form-actions">
-        <button className="form-button" type="submit" > {isPut ? "Salvar" : "Cadastrar"} </button>
-      </div>
-    </form>
+        <div className="form-actions">
+          <button className="form-button" type="submit" > {isPut ? "Salvar" : "Cadastrar"} </button>
+        </div>
+      </form>
+    </div>
   );
 }
