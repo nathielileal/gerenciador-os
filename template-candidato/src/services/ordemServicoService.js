@@ -1,21 +1,49 @@
 import { supabase } from './supabaseClient';
 
 export const OrdemServicoService = {
+    // async get(search = "", status = "", page = 0, pageSize = 10) {
+    //     const from = page * pageSize;
+    //     const to = from + pageSize - 1;
+
+    //     let query = supabase.from("ordens_servico").select("*, cliente:clientes (id, nome)", { count: "exact" });
+
+    //     if (search.length >= 3) {
+    //         query = query.or(`descricao.ilike.%${search}%,cliente.nome.ilike.%${search}%`);
+    //     }
+
+    //     if (status) {
+    //         query = query.eq("status", status);
+    //     }
+
+    //     const { data, error, count } = await query.order("id", { ascending: false }).range(from, to);
+
+    //     if (error) throw error;
+
+    //     return { data, count };
+    // },
+
     async get(search = "", status = "", page = 0, pageSize = 10) {
         const from = page * pageSize;
         const to = from + pageSize - 1;
 
+        let clienteIds = [];
+
         let query = supabase.from("ordens_servico").select("*, cliente:clientes (id, nome)", { count: "exact" });
 
         if (search.length >= 3) {
-            query = query.ilike("descricao", `%${search}%`);
+            const { data: clientes } = await supabase.from("clientes").select("id").ilike("nome", `%${search}%`);
+            clienteIds = clientes?.map(c => c.id) || [];
+
+            query = query.or(`descricao.ilike.%${search}%,cliente_id.in.(${clienteIds.join(",")})`);
         }
 
         if (status) {
             query = query.eq("status", status);
         }
 
-        const { data, error, count } = await query.order("id", { ascending: false }).range(from, to);
+        const { data, error, count } = await query
+            .order("id", { ascending: false })
+            .range(from, to);
 
         if (error) throw error;
 

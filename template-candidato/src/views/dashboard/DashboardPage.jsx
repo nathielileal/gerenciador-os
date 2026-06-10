@@ -38,7 +38,7 @@ export default function DashboardPage() {
             <div className="dashboard">
 
               <div className="dashboard-card">
-                <h3>Total de OS</h3>
+                <h3>Total de Ordens de Serviço</h3>
                 <span>{quantidade.totalOrdens}</span>
               </div>
 
