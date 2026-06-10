@@ -62,13 +62,13 @@ export function convertColorSituacaoOrdem(status) {
             return "#7B3FE080";
         case "A":
         case "EM ANDAMENTO":
-            return "#1d4ed8";
+            return "#1d4ed880";
         case "F":
         case "FINALIZADA":
-            return "#047857";
+            return "#04785780";
         case "C":
         case "CANCELADA":
-            return "#ed3838";
+            return "#ed383880";
         default:
             return "";
     }
