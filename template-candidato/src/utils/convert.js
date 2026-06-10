@@ -39,12 +39,16 @@ export function convertTextNovaSituacaoOrdem(status) {
 export function convertColorSituacaoOrdem(status) {
     switch (status) {
         case "P":
+        case "PENDENTE":
             return "#7B3FE080";
         case "A":
+        case "EM ANDAMENTO":
             return "#1d4ed8";
         case "F":
+        case "FINALIZADA":
             return "#047857";
         case "C":
+        case "CANCELADA":
             return "#ed3838";
         default:
             return "";

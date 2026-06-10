@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 import { useOrdemServicoViewModel } from "../../viewmodels/useOrdemServicoViewModel";
+import "./OrdemServico.css";
 
 export default function OrdemServicoFormPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ cliente_id: 0, descricao: "", valor: 0, status: "P" });
   const { clientes, getClientes, getById, save, update } = useOrdemServicoViewModel();
@@ -32,10 +34,6 @@ export default function OrdemServicoFormPage() {
     });
   }
 
-  function handleClose() {
-    navigate("/ordens");
-  }
-
   function handleChange(field, value) {
     setForm(prev => ({
       ...prev,
@@ -43,8 +41,32 @@ export default function OrdemServicoFormPage() {
     }));
   }
 
+  function validacao() {
+    const erros = {};
+
+    if (!form.cliente_id) {
+      erros.cliente_id = "Cliente é obrigatório";
+    }
+
+    if (!form.descricao.trim()) {
+      erros.descricao = "Descrição é obrigatória";
+    }
+
+    if (!form.valor) {
+      erros.valor = "Valor é obrigatório";
+    }
+
+    setErrors(erros);
+
+    return Object.keys(erros).length === 0;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (!validacao()) {
+      return;
+    }
 
     if (isPut) {
       await update(id, form);
@@ -62,7 +84,7 @@ export default function OrdemServicoFormPage() {
   return (
     <form onSubmit={handleSubmit} className="os-form">
       <div className="form-header">
-        <button className="form-button" onClick={() => handleClose()}><FaArrowLeft></FaArrowLeft></button>
+        <button className="form-button" onClick={() => navigate("/ordens")}><FaArrowLeft></FaArrowLeft></button>
 
         <h2>ORDEM DE SERVIÇO</h2>
 
@@ -77,24 +99,27 @@ export default function OrdemServicoFormPage() {
 
           {clientes.map(cliente => (<option key={cliente.id} value={cliente.id} > {cliente.nome} </option>))}
         </select>
+        {errors.cliente_id && (<small className="error"> {errors.cliente_id} </small>)}
       </div>
 
       <div className="form-group">
         <label>Descrição do problema</label>
 
         <textarea rows={5} value={form.descricao} onChange={(e) => handleChange("descricao", e.target.value)} required />
+        {errors.descricao && (<small className="error"> {errors.descricao} </small>)}
       </div>
 
       <div className="form-group">
         <label>Valor</label>
 
         <input type="number" step="0.01" min="0" value={form.valor} onChange={(e) => handleChange("valor", e.target.value)} required />
+        {errors.valor && (<small className="error"> {errors.valor} </small>)}
       </div>
 
       <div className="form-group">
         <label>Situação</label>
 
-        <input value="P" readOnly />
+        <input value={form.status} readOnly />
       </div>
 
       <div className="form-actions">

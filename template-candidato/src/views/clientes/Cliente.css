@@ -1,15 +1,5 @@
-/* tabela */
-.status {
-    white-space: nowrap;
-    flex-shrink: 0;
-    font-size: small;
-    font-weight: bold;
-    padding: 4px 10px;
-    border-radius: 16px;
-}
 
-/* formulário */
-.os-form {
+.cliente-form {
     gap: 20px;
     display: flex;
     flex-direction: column;
@@ -89,4 +79,11 @@
     gap: 10px;
     display: flex;
     justify-content: flex-end;
+}
+
+.error {
+    color: #b91c1c;
+    font-size: small;
+    margin-top: 4px;
+    margin-left: 4px;
 }

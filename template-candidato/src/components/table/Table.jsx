@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { convertColorSituacaoOrdem, convertTextNovaSituacaoOrdem } from "../../utils/convert";
 import { getNewStatus } from "../../views/ordens-servico/OrdemServicoPage";
 
-export default function Table({ page, columns, data, onSearch, onPageChange, currentPage, pages, loading, hasFilter, onAdd, onEdit, onChange, onDelete }) {
+export default function Table({ page, columns, data, onSearch, onPageChange, currentPage, pages, loading, hasFilter, onAdd, onEdit, onChange, hasChange, onChangeOption, onDelete, hasDelete }) {
     const [search, setSearch] = useState("");
     const [showFilter, setShowFilter] = useState(false);
     const [filter, setFilter] = useState("");
@@ -81,43 +81,35 @@ export default function Table({ page, columns, data, onSearch, onPageChange, cur
             </div>
 
             {loading ? (<p>Carregando dados...</p>) : (
-                <table className="table">
-                    <thead>
-                        <tr>
-                            {columns.map(column => (<th key={column.key}> {column.title} </th>))}
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {data.map(row => (
-                            <tr key={row.id}>
-                                {columns.map(column => (
-                                    <td key={column.key}>
-                                        {column.render ? column.render(row) : row[column.key]}
-                                    </td>
-                                ))}
-                                <td>
-                                    <button className="button-edit" onClick={() => onEdit(row.id)}> <FaPencil /> </button>
-
-                                    {onChange && row.status != 'C' && (<button className="button-change" style={{ backgroundColor: convertColorSituacaoOrdem(getNewStatus(row.status)) }} onClick={() => onChange(row.id, row.status)} >
-                                        <FaExchangeAlt className="icon" />
-                                        {convertTextNovaSituacaoOrdem(getNewStatus(row.status)) ?? "Mudar situação"}
-                                    </button>
-                                    )}
-
-                                    {onChange && row.status != 'C' && (<button className="button-change" style={{ backgroundColor: convertColorSituacaoOrdem("C") }} onClick={() => onChange(row.id, 'C')} >
-                                        <FaExchangeAlt className="icon" />
-                                        {convertTextNovaSituacaoOrdem("C")}
-                                    </button>
-                                    )}
-
-                                    {onDelete && (<button className="button-delete" onClick={() => onDelete(row.id)}> <FaTrashCan /> </button>)}
-                                </td>
+                <div className="table-container">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                {columns.map(column => (<th key={column.key}> {column.title} </th>))}
+                                <th>Ações</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            {data.map(row => (
+                                <tr key={row.id}>
+                                    {columns.map(column => (
+                                        <td key={column.key}>
+                                            {column.render ? column.render(row) : row[column.key]}
+                                        </td>
+                                    ))}
+                                    <td>
+                                        <button className="button-edit" onClick={() => onEdit(row.id)}> <FaPencil /> </button>
+
+                                        {hasChange(row) && onChangeOption(row)}
+
+                                        {hasDelete(row) && (<button className="button-delete" onClick={() => onDelete(row.id, 'C')} ><FaXmark className="icon" /> CANCELAR</button>)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     );

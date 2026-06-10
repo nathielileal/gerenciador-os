@@ -4,6 +4,8 @@ import { ClienteService } from '../services/clienteService';
 export function useClienteViewModel() {
     const [loading, setLoading] = useState(false);
     const [clientes, setClientes] = useState([]);
+    const [cliente, setCliente] = useState(null);
+
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [count, setCount] = useState(0);
@@ -21,25 +23,43 @@ export function useClienteViewModel() {
         }
     }, [search, page]);
 
-    const onSearch = (value, status) => {
+    const onSearch = (value) => {
         setSearch(value);
         setPage(0);
 
-        get(value, status, 0);
+        get(value, 0);
     };
 
     const onPageChange = (newPage) => {
         setPage(newPage);
 
-        get(search, '*', newPage);
+        get(search, newPage);
     };
+
+    const getById = useCallback(async (id) => {
+        setLoading(true);
+
+        try {
+            const data = await ClienteService.getById(id);
+
+            setCliente(data);
+
+            return data;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     const save = useCallback(async (cliente) => {
         await ClienteService.post(cliente);
-        await get();
-    }, [get]);
+    }, []);
+
+    const update = useCallback(async (id, cliente) => {
+        await ClienteService.put(id, cliente);
+    }, []);
+
 
     const pages = Math.ceil(count / 10);
 
-    return { clientes, loading, get, save, search, page, onSearch, onPageChange, pages };
+    return { clientes, cliente, loading, get, getById, save, update, search, page, onSearch, onPageChange, pages };
 }

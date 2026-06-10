@@ -1,5 +1,5 @@
 .nav {
-    gap: 12px;
+    gap: 10px;
     display: flex;
     padding: 16px;
     border-bottom: 1px solid #C59BFF;
@@ -8,25 +8,23 @@
 .nav-logo {
     gap: 8px;
     display: flex;
-    align-items: center;
-    margin-inline: 40px;
-    font-weight: bold;
-    text-decoration: none;
     color: #7B3FE0;
+    font-weight: bold;
+    margin-inline: 30px;
+    align-items: center;
+    text-decoration: none;
     font-family: 'Montserrat', sans-serif;
 }
 
 .nav-link {
-    text-decoration: none;
-    color: inherit;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    color: inherit;
+    font-size: small;
     color: #9F63E1;
-    margin-inline: 5px;
+    align-items: center;
+    text-decoration: none;
     font-family: "Charter", "Bitstream Charter", "Georgia", serif;
     /* font-family: "Merriweather", serif; */
-    font-size: small;
 }
 
 .nav-link:hover {

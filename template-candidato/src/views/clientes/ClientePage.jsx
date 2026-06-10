@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Table from "../../components/table/Table.jsx";
 import { getPhoneFormat } from "../../utils/function.js";
 import { useClienteViewModel } from "../../viewmodels/useClienteViewModel";
@@ -24,7 +25,16 @@ const columns = [
 ];
 
 export default function ClientePage() {
+  const navigate = useNavigate();
   const { clientes, loading, save, get, onSearch, onPageChange, page, pages } = useClienteViewModel();
+
+  function handleEdit(id) {
+    navigate(`/clientes/${id}`);
+  }
+
+  function handleAdd() {
+    navigate("/clientes/novo");
+  }
 
   useEffect(() => {
     get("");
@@ -41,6 +51,10 @@ export default function ClientePage() {
         currentPage={page}
         pages={pages}
         loading={loading}
+        onAdd={handleAdd}
+        onEdit={handleEdit}
+        hasChange={() => false}
+        hasDelete={() => false}
       />
     </div>
   );

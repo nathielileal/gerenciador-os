@@ -1,10 +1,11 @@
 import { useOrdemServicoViewModel } from "../../viewmodels/useOrdemServicoViewModel";
-import { convertColorSituacaoOrdem, convertTextSituacaoOrdem } from "../../utils/convert.js"
+import { convertColorSituacaoOrdem, convertTextNovaSituacaoOrdem, convertTextSituacaoOrdem } from "../../utils/convert.js"
 import { getNumberFormat } from "../../utils/function.js"
 import "./OrdemServico.css";
 import Table from "../../components/table/Table.jsx";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaExchangeAlt } from "react-icons/fa";
 
 const columns = [
     {
@@ -83,7 +84,14 @@ export default function OrdemServicoPage() {
                 hasFilter={true}
                 onAdd={handleAdd}
                 onEdit={handleEdit}
+                hasChange={(row) => row.status != 'C' && getNewStatus(row.status) != 'C'}
                 onChange={handleChangeStatus}
+                onChangeOption={(row) => <button className="button-change" style={{ backgroundColor: convertColorSituacaoOrdem(getNewStatus(row.status)) }} onClick={() => onChange(row.id, row.status)} >
+                    <FaExchangeAlt className="icon" />
+                    {convertTextNovaSituacaoOrdem(getNewStatus(row.status))}
+                </button>}
+                hasDelete={(row) => row.status != 'C'}
+                onDelete={handleChangeStatus}
             />
         </div>
     );

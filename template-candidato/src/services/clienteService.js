@@ -26,8 +26,22 @@ export const ClienteService = {
         return data;
     },
 
-    async inserir(cliente) {
-        const { error } = await supabase.from('clientes').insert(cliente);
+    async getById(id) {
+        const { data, error } = await supabase.from("clientes").select("*").eq("id", id).single();
+
+        if (error) throw error;
+
+        return data;
+    },
+
+    async post(cliente) {
+        const { error } = await supabase.from("clientes").insert(cliente);
+
+        if (error) throw error;
+    },
+
+    async put(id, cliente) {
+        const { error } = await supabase.from("clientes").update(cliente).eq("id", id);
 
         if (error) throw error;
     }

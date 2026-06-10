@@ -43,7 +43,7 @@
 
 .table-input {
     border: none;
-    margin-inline: 10px;
+    margin-inline: 5px;
 }
 
 input:focus {
@@ -116,8 +116,16 @@ input:focus {
     background-color: transparent;
 }
 
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 600px;
+}
+
 .table {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
     background: #ffffff;
     border-radius: 16px;
@@ -167,17 +175,6 @@ input:focus {
     background: #7B3FE0;
 }
 
-.button-delete {
-    border: none;
-    color: white;
-    padding-top: 5px;
-    margin-inline: 5px;
-    padding-bottom: 5px;
-    border-radius: 10px;
-    padding-inline: 10px;
-    background: #bd0000;
-}
-
 .button-change {
     border: none;
     color: white;
@@ -188,6 +185,17 @@ input:focus {
     padding-inline: 10px;
 }
 
+.button-delete {
+    border: none;
+    color: white;
+    padding-top: 5px;
+    margin-inline: 5px;
+    padding-bottom: 5px;
+    border-radius: 10px;
+    padding-inline: 10px;
+    background: #ed3838;
+}
+
 .table-button:hover,
 .table-page-button:hover,
 .button-close:hover,
@@ -195,4 +203,31 @@ input:focus {
 .button-change:hover,
 .button-delete:hover {
     color: #C59BFF;
+}
+
+/* para ajustar o alinhamento de acordo com o tamanho da tela */
+@media (max-width: 768px) {
+    .table-header {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .table-options {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .table-search {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .table-input {
+        width: calc(100% - 35px);
+    }
+
+    .filter-popup {
+        right: 0;
+    }
 }

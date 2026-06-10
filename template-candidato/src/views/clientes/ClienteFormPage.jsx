@@ -1,26 +1,123 @@
+import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
+import { useNavigate, useParams } from "react-router-dom";
+import { useClienteViewModel } from "../../viewmodels/useClienteViewModel";
+import "./Cliente.css";
+import { getPhoneFormat, isTelefoneValido } from "../../utils/function";
+
 export default function ClienteFormPage() {
-    return (
-    <div style={{ maxWidth: '800px', margin: '60px auto', fontFamily: 'system-ui, sans-serif', padding: '0 20px', lineHeight: '1.6' }}>
-      <header style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '20px', marginBottom: '20px' }}>
-        <h1 style={{ color: '#0f172a', fontSize: '2.2rem', fontWeight: '800', letterSpacing: '-0.025em' }}>
-          🛠️ TecFix - Controle de Ordens de Serviço
-        </h1>
-        <p style={{ color: '#64748b', fontSize: '1.1rem', marginTop: '8px' }}>
-          Desenvolva aqui a interface da sua aplicação integrada ao Supabase.
-        </p>
-      </header>
-      
-      <main>
-        <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
-          <h2 style={{ color: '#1e293b', fontSize: '1.25rem', marginBottom: '12px' }}>Como iniciar:</h2>
-          <ul style={{ paddingLeft: '20px', color: '#334155' }}>
-            <li style={{ marginBottom: '8px' }}>Consulte o arquivo <code>INSTRUCOES.md</code> na raiz do repositório para ver os requisitos de negócio e banco de dados.</li>
-            <li style={{ marginBottom: '8px' }}>Crie o seu arquivo <code>.env</code> a partir de <code>.env.example</code> e insira as credenciais do seu Supabase.</li>
-            {/* <li style={{ marginBottom: '8px' }}>Importe o cliente do banco usando: <code>import { supabase } from './supabaseClient';</code></li> */}
-            <li>Fique livre para criar novos componentes, instalar pacotes de ícones ou frameworks de CSS (como Tailwind) para enriquecer o seu projeto.</li>
-          </ul>
-        </div>
-      </main>
-    </div>
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
+  const [form, setForm] = useState({ nome: "", email: "", telefone: "" });
+  const { getById, save, update, loading } = useClienteViewModel();
+
+  const isPut = !!id;
+
+  useEffect(() => {
+    if (id) {
+      carregarCliente();
+    }
+  }, [id]);
+
+  async function carregarCliente() {
+    const cliente = await getById(id);
+
+    setForm({
+      nome: cliente.nome ?? "",
+      email: cliente.email ?? "",
+      telefone: getPhoneFormat(cliente.telefone ?? "")
+    });
+  }
+
+  function handleChange(field, value) {
+    setForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  }
+
+  function validacao() {
+    const erros = {};
+
+    if (!form.nome.trim()) {
+      erros.nome = "Nome é obrigatório.";
+    }
+
+    if (!form.email.trim()) {
+      erros.email = "E-mail é obrigatório.";
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      erros.email = "E-mail inválido!";
+    }
+
+    if (!form.telefone.trim()) {
+      erros.telefone = "Telefone é obrigatório.";
+    } else if (!isTelefoneValido(form.telefone)) {
+      erros.telefone = "Telefone inválido!";
+    }
+
+    setErrors(erros);
+
+    return Object.keys(erros).length === 0;
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!validacao()) {
+      return;
+    }
+
+    const clienteRequest = { ...form, telefone: form.telefone.replace(/\D/g, "") };
+
+    if (isPut) {
+      await update(id, clienteRequest);
+    } else {
+      await save(clienteRequest);
+    }
+
+    navigate("/clientes");
+  }
+
+  return (
+    <form className="cliente-form" onSubmit={handleSubmit}>
+      <div className="form-header">
+        <button type="button" className="form-button" onClick={() => navigate("/clientes")}>
+          <FaArrowLeft />
+        </button>
+
+        <h2>CLIENTE</h2>
+
+        {isPut ? <span>#{id}</span> : <span />}
+      </div>
+
+      <div className="form-group">
+        <label>Nome</label>
+
+        <input value={form.nome} onChange={(e) => handleChange("nome", e.target.value)} required />
+        {errors.nome && (<small className="error"> {errors.nome} </small>)}
+      </div>
+
+      <div className="form-group">
+        <label>E-mail</label>
+
+        <input type="email" value={form.email} onChange={(e) => handleChange("email", e.target.value)} placeholder="exemplo@dominio.com" required />
+
+        {errors.email && (<small className="error"> {errors.email} </small>)}
+      </div>
+
+      <div className="form-group">
+        <label>Telefone</label>
+
+        <input value={form.telefone} onChange={(e) => handleChange("telefone", getPhoneFormat(e.target.value))} placeholder="(41) 99999-9999" required />
+
+        {errors.telefone && (<small className="error"> {errors.telefone} </small>)}
+      </div>
+
+      <div className="form-actions">
+        <button className="form-button" type="submit" > {isPut ? "Salvar" : "Cadastrar"} </button>
+      </div>
+    </form>
   );
 }
