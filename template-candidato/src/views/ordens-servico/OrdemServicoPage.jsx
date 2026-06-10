@@ -52,7 +52,7 @@ export function getNewStatus(status) {
 
 export default function OrdemServicoPage() {
     const navigate = useNavigate();
-    const { ordens, loading, get, changeStatus, onSearch, onPageChange, page, pages } = useOrdemServicoViewModel();
+    const { ordens, error, loading, get, refresh, changeStatus, onSearch, onPageChange, page, pages } = useOrdemServicoViewModel();
 
     function handleEdit(id) {
         navigate(`/ordens/${id}`);
@@ -72,6 +72,12 @@ export default function OrdemServicoPage() {
 
     return (
         <div>
+            {error && (
+                <div className="error-banner">
+                    {error}
+                </div>
+            )}
+            
             <Table
                 page="Ordens de Serviço"
                 columns={columns}
@@ -91,6 +97,7 @@ export default function OrdemServicoPage() {
                 </button>}
                 hasDelete={(row) => row.status != 'C'}
                 onDelete={handleChangeStatus}
+                refresh={refresh}
             />
         </div>
     );

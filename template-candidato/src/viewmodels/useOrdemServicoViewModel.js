@@ -19,6 +19,14 @@ export function useOrdemServicoViewModel() {
     const [page, setPage] = useState(0);
     const [count, setCount] = useState(0);
 
+    const [error, setError] = useState(null);
+
+    const handleError = (err) => {
+        const message = err?.message || "Erro inesperado. Tente novamente.";
+
+        setError(message);
+    };
+
     const get = useCallback(async (searchValue = search, situacao = status, pageNumber = page) => {
         setLoading(true);
 
@@ -27,6 +35,8 @@ export function useOrdemServicoViewModel() {
 
             setOrdens(result.data ?? []);
             setCount(result.count ?? 0);
+        } catch (err) {
+            handleError(err);
         } finally {
             setLoading(false);
         }
@@ -55,6 +65,8 @@ export function useOrdemServicoViewModel() {
             setOrdem(data);
 
             return data;
+        } catch (err) {
+            handleError(err);
         } finally {
             setLoading(false);
         }
@@ -93,17 +105,39 @@ export function useOrdemServicoViewModel() {
                 name: item.cliente_nome,
                 value: Number(item.total) || 0
             })));
+        } catch (err) {
+            handleError(err);
         } finally {
             setLoading(false);
         }
     }, []);
 
+    const refresh = async () => {
+        await Promise.all([get(), getValores()]);
+    };
+
     const save = useCallback(async (ordem) => {
-        await OrdemServicoService.post(ordem);
+        setLoading(true);
+
+        try {
+            await OrdemServicoService.post(ordem);
+        } catch (err) {
+            handleError(err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     const update = useCallback(async (id, ordem) => {
-        await OrdemServicoService.put(id, ordem);
+        setLoading(true);
+
+        try {
+            await OrdemServicoService.put(id, ordem);
+        } catch (err) {
+            handleError(err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     const changeStatus = useCallback(async (id, status) => {
@@ -113,5 +147,5 @@ export function useOrdemServicoViewModel() {
 
     const pages = Math.ceil(count / 10);
 
-    return { ordens, ordem, clientes, dashboard, quantidade, faturamento, loading, get, getById, getClientes, getValores, save, update, changeStatus, search, page, pages, onSearch, onPageChange };
+    return { ordens, ordem, clientes, dashboard, quantidade, faturamento, error, loading, get, getById, getClientes, getValores, refresh, save, update, changeStatus, search, page, pages, onSearch, onPageChange };
 }

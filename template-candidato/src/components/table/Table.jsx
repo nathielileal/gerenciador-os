@@ -1,14 +1,15 @@
 import { FaFilter, FaPencil, FaTrashCan, FaX, FaXmark } from "react-icons/fa6";
 import "./Table.css";
-import { FaAngleDoubleLeft, FaAngleDoubleRight, FaExchangeAlt, FaPlusSquare, FaSearch, FaWindowClose } from "react-icons/fa";
+import { FaAngleDoubleLeft, FaAngleDoubleRight, FaExchangeAlt, FaPlusSquare, FaSearch, FaSync, FaWindowClose } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { convertColorSituacaoOrdem, convertTextNovaSituacaoOrdem } from "../../utils/convert";
 import { getNewStatus } from "../../views/ordens-servico/OrdemServicoPage";
 
-export default function Table({ page, columns, data, onSearch, onPageChange, currentPage, pages, loading, hasFilter, onAdd, onEdit, hasChange, onChangeOption, onDelete, hasDelete }) {
+export default function Table({ page, columns, data, onSearch, onPageChange, currentPage, pages, loading, refresh, hasFilter, onAdd, onEdit, hasChange, onChangeOption, onDelete, hasDelete }) {
     const [search, setSearch] = useState("");
     const [showFilter, setShowFilter] = useState(false);
     const [filter, setFilter] = useState("");
+    const hasData = data && data.length > 0;
 
     function handleChange(value) {
         setSearch(value);
@@ -69,6 +70,7 @@ export default function Table({ page, columns, data, onSearch, onPageChange, cur
                     )}
 
                     <button className="table-button" onClick={() => onAdd()}> <FaPlusSquare className="icon" size={15} /> Novo </button>
+                    <button className="table-button" onClick={() => refresh()}> <FaSync size={15} /> </button>
 
                     <div className="table-page">
                         Página {currentPage + 1} / {pages || 1}
@@ -80,37 +82,42 @@ export default function Table({ page, columns, data, onSearch, onPageChange, cur
                 </div>
             </div>
 
-            {loading ? (<p>Carregando dados...</p>) : (
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                {columns.map(column => (<th key={column.key}> {column.title} </th>))}
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {data.map(row => (
-                                <tr key={row.id}>
-                                    {columns.map(column => (
-                                        <td key={column.key}>
-                                            {column.render ? column.render(row) : row[column.key]}
-                                        </td>
-                                    ))}
-                                    <td>
-                                        <button className="button-edit" onClick={() => onEdit(row.id)}> <FaPencil /> </button>
-
-                                        {hasChange(row) && onChangeOption(row)}
-
-                                        {hasDelete(row) && (<button className="button-delete" onClick={() => onDelete(row.id, 'C')} ><FaXmark className="icon" /> CANCELAR</button>)}
-                                    </td>
+            {loading ? (<p>Carregando dados...</p>) :
+                !hasData ? (
+                    <div className="empty-state">
+                        <h3>Nenhum dado encontrado</h3>
+                        <p>Não existem ordens de serviço para exibir no momento.</p>
+                    </div>) : (
+                    <div className="table-container">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    {columns.map(column => (<th key={column.key}> {column.title} </th>))}
+                                    <th>Ações</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                            </thead>
+
+                            <tbody>
+                                {data.map(row => (
+                                    <tr key={row.id}>
+                                        {columns.map(column => (
+                                            <td key={column.key}>
+                                                {column.render ? column.render(row) : row[column.key]}
+                                            </td>
+                                        ))}
+                                        <td>
+                                            <button className="button-edit" onClick={() => onEdit(row.id)}> <FaPencil /> </button>
+
+                                            {hasChange(row) && onChangeOption(row)}
+
+                                            {hasDelete(row) && (<button className="button-delete" onClick={() => onDelete(row.id, 'C')} ><FaXmark className="icon" /> CANCELAR</button>)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
         </div>
     );
 }

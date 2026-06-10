@@ -3,6 +3,7 @@ import Table from "../../components/table/Table.jsx";
 import { getPhoneFormat } from "../../utils/function.js";
 import { useClienteViewModel } from "../../viewmodels/useClienteViewModel";
 import { useEffect } from "react";
+import './Cliente.css';
 
 const columns = [
   {
@@ -26,7 +27,7 @@ const columns = [
 
 export default function ClientePage() {
   const navigate = useNavigate();
-  const { clientes, loading, save, get, onSearch, onPageChange, page, pages } = useClienteViewModel();
+  const { clientes, error, loading, refresh, save, get, onSearch, onPageChange, page, pages } = useClienteViewModel();
 
   function handleEdit(id) {
     navigate(`/clientes/${id}`);
@@ -42,6 +43,12 @@ export default function ClientePage() {
 
   return (
     <div>
+      {error && (
+        <div className="error-banner">
+          {error}
+        </div>
+      )}
+
       <Table
         page="Clientes"
         columns={columns}
@@ -51,6 +58,7 @@ export default function ClientePage() {
         currentPage={page}
         pages={pages}
         loading={loading}
+        refresh={refresh}
         onAdd={handleAdd}
         onEdit={handleEdit}
         hasChange={() => false}

@@ -1,3 +1,13 @@
+.error-banner {
+    top: 0;
+    z-index: 999;
+    color: white;
+    position: sticky;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    background: #ef4444;
+}
 
 .cliente-form {
     gap: 20px;

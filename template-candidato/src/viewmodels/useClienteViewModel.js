@@ -10,6 +10,14 @@ export function useClienteViewModel() {
     const [page, setPage] = useState(0);
     const [count, setCount] = useState(0);
 
+    const [error, setError] = useState(null);
+
+    const handleError = (err) => {
+        const message = err?.message || "Erro inesperado. Tente novamente.";
+
+        setError(message);
+    };
+
     const get = useCallback(async (searchValue = search, pageNumber = page) => {
         setLoading(true);
 
@@ -18,6 +26,8 @@ export function useClienteViewModel() {
 
             setClientes(result.data ?? []);
             setCount(result.count ?? 0);
+        } catch (err) {
+            handleError(err);
         } finally {
             setLoading(false);
         }
@@ -45,21 +55,42 @@ export function useClienteViewModel() {
             setCliente(data);
 
             return data;
+        } catch (err) {
+            handleError(err);
         } finally {
             setLoading(false);
         }
     }, []);
 
+    const refresh = async () => {
+        await Promise.all([get()]);
+    };
+
     const save = useCallback(async (cliente) => {
-        await ClienteService.post(cliente);
+        setLoading(true);
+
+        try {
+            await ClienteService.post(cliente);
+        } catch (err) {
+            handleError(err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     const update = useCallback(async (id, cliente) => {
-        await ClienteService.put(id, cliente);
-    }, []);
+        setLoading(true);
 
+        try {
+            await ClienteService.put(id, cliente);
+        } catch (err) {
+            handleError(err);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     const pages = Math.ceil(count / 10);
 
-    return { clientes, cliente, loading, get, getById, save, update, search, page, onSearch, onPageChange, pages };
+    return { clientes, cliente, error, loading, get, getById, save, update, refresh, search, page, onSearch, onPageChange, pages };
 }
