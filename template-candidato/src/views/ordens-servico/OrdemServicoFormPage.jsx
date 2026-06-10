@@ -11,7 +11,7 @@ export default function OrdemServicoFormPage() {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ cliente_id: 0, descricao: "", valor: 0, status: "P" });
+  const [form, setForm] = useState({ cliente_id: 0, descricao: "", valor: 0, status: "PENDENTE" });
   const { clientes, getClientes, getById, save, update } = useOrdemServicoViewModel();
 
   const isPut = !!id;
