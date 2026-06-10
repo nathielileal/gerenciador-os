@@ -1,26 +1,105 @@
+import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
+import { useNavigate, useParams } from "react-router-dom";
+import { useOrdemServicoViewModel } from "../../viewmodels/useOrdemServicoViewModel";
+
 export default function OrdemServicoFormPage() {
-    return (
-    <div style={{ maxWidth: '800px', margin: '60px auto', fontFamily: 'system-ui, sans-serif', padding: '0 20px', lineHeight: '1.6' }}>
-      <header style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '20px', marginBottom: '20px' }}>
-        <h1 style={{ color: '#0f172a', fontSize: '2.2rem', fontWeight: '800', letterSpacing: '-0.025em' }}>
-          🛠️ TecFix - Controle de Ordens de Serviço
-        </h1>
-        <p style={{ color: '#64748b', fontSize: '1.1rem', marginTop: '8px' }}>
-          Desenvolva aqui a interface da sua aplicação integrada ao Supabase.
-        </p>
-      </header>
-      
-      <main>
-        <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
-          <h2 style={{ color: '#1e293b', fontSize: '1.25rem', marginBottom: '12px' }}>Como iniciar:</h2>
-          <ul style={{ paddingLeft: '20px', color: '#334155' }}>
-            <li style={{ marginBottom: '8px' }}>Consulte o arquivo <code>INSTRUCOES.md</code> na raiz do repositório para ver os requisitos de negócio e banco de dados.</li>
-            <li style={{ marginBottom: '8px' }}>Crie o seu arquivo <code>.env</code> a partir de <code>.env.example</code> e insira as credenciais do seu Supabase.</li>
-            {/* <li style={{ marginBottom: '8px' }}>Importe o cliente do banco usando: <code>import { supabase } from './supabaseClient';</code></li> */}
-            <li>Fique livre para criar novos componentes, instalar pacotes de ícones ou frameworks de CSS (como Tailwind) para enriquecer o seu projeto.</li>
-          </ul>
-        </div>
-      </main>
-    </div>
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({ cliente_id: 0, descricao: "", valor: 0, status: "P" });
+  const { clientes, getClientes, getById, save, update } = useOrdemServicoViewModel();
+
+  const isPut = !!id;
+
+  useEffect(() => {
+    getClientes();
+
+    if (id) {
+      carregarOrdem();
+    }
+  }, [id]);
+
+  async function carregarOrdem() {
+    const ordem = await getById(id);
+
+    setForm({
+      cliente_id: ordem.cliente_id,
+      descricao: ordem.descricao,
+      valor: ordem.valor,
+      status: ordem.status
+    });
+  }
+
+  function handleClose() {
+    navigate("/ordens");
+  }
+
+  function handleChange(field, value) {
+    setForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (isPut) {
+      await update(id, form);
+    } else {
+      await save(form);
+    }
+
+    navigate("/ordens");
+  }
+
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="os-form">
+      <div className="form-header">
+        <button className="form-button" onClick={() => handleClose()}><FaArrowLeft></FaArrowLeft></button>
+
+        <h2>ORDEM DE SERVIÇO</h2>
+
+        {isPut && <span>#{id}</span>}
+      </div>
+
+      <div className="form-group">
+        <label>Cliente</label>
+
+        <select value={form.cliente_id} onChange={(e) => handleChange("cliente_id", e.target.value)} required>
+          <option value="">Selecione...</option>
+
+          {clientes.map(cliente => (<option key={cliente.id} value={cliente.id} > {cliente.nome} </option>))}
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label>Descrição do problema</label>
+
+        <textarea rows={5} value={form.descricao} onChange={(e) => handleChange("descricao", e.target.value)} required />
+      </div>
+
+      <div className="form-group">
+        <label>Valor</label>
+
+        <input type="number" step="0.01" min="0" value={form.valor} onChange={(e) => handleChange("valor", e.target.value)} required />
+      </div>
+
+      <div className="form-group">
+        <label>Situação</label>
+
+        <input value="P" readOnly />
+      </div>
+
+      <div className="form-actions">
+        <button className="form-button" type="submit"> {isPut ? "Salvar" : "Cadastrar"}</button>
+      </div>
+    </form>
   );
 }

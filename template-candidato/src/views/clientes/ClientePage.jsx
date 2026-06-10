@@ -1,6 +1,7 @@
 import Table from "../../components/table/Table.jsx";
-import { formatPhoneNumber } from "../../utils/function";
+import { getPhoneFormat } from "../../utils/function.js";
 import { useClienteViewModel } from "../../viewmodels/useClienteViewModel";
+import { useEffect } from "react";
 
 const columns = [
   {
@@ -18,18 +19,29 @@ const columns = [
   {
     key: "telefone",
     title: "Telefone",
-    render: row => formatPhoneNumber(row.telefone)
+    render: row => getPhoneFormat(row.telefone)
   }
 ];
 
 export default function ClientePage() {
-  const { clientes, loading, salvar } = useClienteViewModel();
+  const { clientes, loading, save, get, onSearch, onPageChange, page, pages } = useClienteViewModel();
+
+  useEffect(() => {
+    get("");
+  }, [get]);
 
   return (
     <div>
-      {loading ? (<p>Carregando...</p>) : (
-        <Table page={"Clientes"} columns={columns} data={clientes}></Table>
-      )}
+      <Table
+        page="Clientes"
+        columns={columns}
+        data={clientes}
+        onSearch={onSearch}
+        onPageChange={onPageChange}
+        currentPage={page}
+        pages={pages}
+        loading={loading}
+      />
     </div>
   );
 }

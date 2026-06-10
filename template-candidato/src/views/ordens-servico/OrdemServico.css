@@ -1,0 +1,90 @@
+/* tabela */
+.status {
+    font-size: small;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 16px;
+}
+
+/* formulário */
+.os-form {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-header {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-header h2 {
+    margin: 0;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-button {
+    border: none;
+    padding: 10px;
+    display: flex;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    align-items: center;
+    background: #7B3FE0;
+}
+
+.form-group {
+    gap: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #334155;
+    font-family: "Charter", "Bitstream Charter", "Georgia", serif;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: small;
+    border-radius: 16px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    border: 1px solid #C59BFF80;
+    font-family: "Charter", "Bitstream Charter", "Georgia", serif;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 50px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #7B3FE0;
+}
+
+.form-group input[readonly] {
+    color: #C59BFF;
+    cursor: not-allowed;
+    background: #f8fafc;
+}
+
+.form-actions {
+    gap: 10px;
+    display: flex;
+    justify-content: flex-end;
+}

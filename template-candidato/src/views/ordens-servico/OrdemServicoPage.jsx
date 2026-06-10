@@ -1,8 +1,10 @@
 import { useOrdemServicoViewModel } from "../../viewmodels/useOrdemServicoViewModel";
-import { convertTextSituacaoOrdem } from "../../utils/convert.js"
+import { convertColorSituacaoOrdem, convertTextSituacaoOrdem } from "../../utils/convert.js"
 import { getNumberFormat } from "../../utils/function.js"
 import "./OrdemServico.css";
 import Table from "../../components/table/Table.jsx";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
     {
@@ -10,8 +12,9 @@ const columns = [
         title: "#"
     },
     {
-        key: "cliente_id",
-        title: "Cliente"
+        key: "cliente",
+        title: "Cliente",
+        render: row => row.cliente?.nome
     },
     {
         key: "descricao",
@@ -25,22 +28,63 @@ const columns = [
     {
         key: "status",
         title: "Situação",
-        render: row => (
-            <span className={`status status-${row.status}`}>
-                {convertTextSituacaoOrdem(row.status)}
-            </span>
-        )
+        render: row => (<ContainerSituacao status={row.status}> {convertTextSituacaoOrdem(row.status)} </ContainerSituacao>)
     }
 ];
 
+export function ContainerSituacao({ status, children }) {
+    return (<span className={`status status-${status}`} style={{ backgroundColor: convertColorSituacaoOrdem(status) }}> {children} </span>);
+}
+
+export function getNewStatus(status) {
+    switch (status) {
+        case "P":
+            return "A";
+
+        case "A":
+            return "F";
+
+        default:
+            return "C";
+    }
+}
+
 export default function OrdemServicoPage() {
-    const { ordem, loading, salvar } = useOrdemServicoViewModel();
+    const navigate = useNavigate();
+    const { ordens, loading, get, changeStatus, onSearch, onPageChange, page, pages } = useOrdemServicoViewModel();
+
+    function handleEdit(id) {
+        navigate(`/ordens/${id}`);
+    }
+
+    function handleAdd() {
+        navigate("/ordens/nova");
+    }
+
+    async function handleChangeStatus(id, status) {
+        await changeStatus(id, getNewStatus(status));
+    }
+
+    useEffect(() => {
+        get("");
+    }, [get]);
 
     return (
         <div>
-            {loading ? (<p>Carregando...</p>) : (
-                <Table page={"Ordens de Serviço"} columns={columns} data={ordem}></Table>
-            )}
+            <Table
+                page="Ordens de Serviço"
+                columns={columns}
+                data={ordens}
+                onSearch={onSearch}
+                onPageChange={onPageChange}
+                currentPage={page}
+                pages={pages}
+                loading={loading}
+                hasFilter={true}
+                onAdd={handleAdd}
+                onEdit={handleEdit}
+                onChange={handleChangeStatus}
+            />
         </div>
     );
 }

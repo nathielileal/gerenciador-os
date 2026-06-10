@@ -24,7 +24,8 @@
     gap: 8px;
     color: #9F63E1;
     margin-inline: 5px;
-    font-family: 'Copse', sans-serif;
+    font-family: "Charter", "Bitstream Charter", "Georgia", serif;
+    /* font-family: "Merriweather", serif; */
     font-size: small;
 }
 
