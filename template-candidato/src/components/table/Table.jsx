@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { convertColorSituacaoOrdem, convertTextNovaSituacaoOrdem } from "../../utils/convert";
 import { getNewStatus } from "../../views/ordens-servico/OrdemServicoPage";
 
-export default function Table({ page, columns, data, onSearch, onPageChange, currentPage, pages, loading, hasFilter, onAdd, onEdit, onChange, hasChange, onChangeOption, onDelete, hasDelete }) {
+export default function Table({ page, columns, data, onSearch, onPageChange, currentPage, pages, loading, hasFilter, onAdd, onEdit, hasChange, onChangeOption, onDelete, hasDelete }) {
     const [search, setSearch] = useState("");
     const [showFilter, setShowFilter] = useState(false);
     const [filter, setFilter] = useState("");

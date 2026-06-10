@@ -30,6 +30,38 @@ export const OrdemServicoService = {
         return data;
     },
 
+    async getTotalOrdens(status) {
+        const { count, error } = await supabase.from("ordens_servico").select("*", { count: "exact", head: true });
+
+        if (error) throw error;
+
+        return count;
+    },
+
+    async getTotalByStatus(status) {
+        const { count, error } = await supabase.from("ordens_servico").select("*", { count: "exact", head: true }).eq("status", status);
+
+        if (error) throw error;
+
+        return count;
+    },
+
+    async getTotal() {
+        const { data, error } = await supabase.rpc("get_faturamento_total");
+
+        if (error) throw error;
+
+        return data;
+    },
+
+    async getTotalByCliente() {
+        const { data, error } = await supabase.rpc("get_faturamento_por_cliente");
+
+        if (error) throw error;
+
+        return data;
+    },
+
     async post(ordem) {
         const { error } = await supabase.from("ordens_servico").insert({
             ...ordem,

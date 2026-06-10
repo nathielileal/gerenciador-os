@@ -8,7 +8,8 @@ export default function Navbar() {
                 <img src="/hero.png" alt="TecFix" width={20} height={20} /> TecFix
             </div>
 
-            <NavLink to="/" className="nav-link"> Dashboard </NavLink>
+            {/* páginas */}
+            <NavLink to="/" className="nav-link"> Visão Geral </NavLink>
             <NavLink to="/ordens" className="nav-link"> Ordens de Serviço </NavLink>
             <NavLink to="/clientes" className="nav-link"> Clientes </NavLink>
         </nav>

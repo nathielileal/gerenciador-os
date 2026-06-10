@@ -69,12 +69,12 @@ export default function ClienteFormPage() {
       return;
     }
 
-    const clienteRequest = { ...form, telefone: form.telefone.replace(/\D/g, "") };
+    const c = { ...form, telefone: form.telefone.replace(/\D/g, "") };
 
     if (isPut) {
-      await update(id, clienteRequest);
+      await update(id, c);
     } else {
-      await save(clienteRequest);
+      await save(c);
     }
 
     navigate("/clientes");

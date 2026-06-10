@@ -19,3 +19,30 @@ create table ordens_servico (
     CONSTRAINT ordens_servico_pk PRIMARY KEY (id),
     CONSTRAINT ordens_cliente_fk FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 );
+
+create or replace function get_faturamento_total()
+returns numeric
+language sql
+as $$
+    select coalesce(sum(valor), 0) as faturamento
+    from ordens_servico
+    where status = 'F';
+$$;
+
+create or replace function get_faturamento_por_cliente()
+returns table (
+  cliente_id bigint,
+  cliente_nome text,
+  total numeric
+)
+as $$
+  select
+    c.id as cliente_id,
+    c.nome as cliente_nome,
+    sum(o.valor) as total
+  from ordens_servico o
+  join clientes c on c.id = o.cliente_id
+  where status = 'F'
+  group by c.id, c.nome
+  order by total desc;
+$$ language sql;

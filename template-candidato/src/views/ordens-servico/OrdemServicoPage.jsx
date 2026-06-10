@@ -85,8 +85,7 @@ export default function OrdemServicoPage() {
                 onAdd={handleAdd}
                 onEdit={handleEdit}
                 hasChange={(row) => row.status != 'C' && getNewStatus(row.status) != 'C'}
-                onChange={handleChangeStatus}
-                onChangeOption={(row) => <button className="button-change" style={{ backgroundColor: convertColorSituacaoOrdem(getNewStatus(row.status)) }} onClick={() => onChange(row.id, row.status)} >
+                onChangeOption={(row) => <button className="button-change" style={{ backgroundColor: convertColorSituacaoOrdem(getNewStatus(row.status)) }} onClick={() => handleChangeStatus(row.id, row.status)} >
                     <FaExchangeAlt className="icon" />
                     {convertTextNovaSituacaoOrdem(getNewStatus(row.status))}
                 </button>}

@@ -17,6 +17,25 @@ export function convertTextSituacaoOrdem(status) {
     }
 }
 
+export function convertSiglaSituacaoOrdem(status) {
+    switch (status) {
+        case 'PENDENTE':
+            return 'P';
+
+        case 'EM ANDAMENTO':
+            return 'A';
+
+        case 'FINALIZADA':
+            return 'F';
+
+        case 'CANCELADA':
+            return 'C';
+
+        default:
+            return 'P';
+    }
+}
+
 export function convertTextNovaSituacaoOrdem(status) {
     switch (status) {
         case 'P':

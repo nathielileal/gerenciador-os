@@ -3,6 +3,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 import { useOrdemServicoViewModel } from "../../viewmodels/useOrdemServicoViewModel";
 import "./OrdemServico.css";
+import { convertSiglaSituacaoOrdem, convertTextSituacaoOrdem } from "../../utils/convert";
 
 export default function OrdemServicoFormPage() {
   const { id } = useParams();
@@ -30,7 +31,7 @@ export default function OrdemServicoFormPage() {
       cliente_id: ordem.cliente_id,
       descricao: ordem.descricao,
       valor: ordem.valor,
-      status: ordem.status
+      status: convertTextSituacaoOrdem(ordem.status)
     });
   }
 
@@ -68,10 +69,12 @@ export default function OrdemServicoFormPage() {
       return;
     }
 
+    const o = { ...form, status: convertSiglaSituacaoOrdem(form.status) };
+
     if (isPut) {
-      await update(id, form);
+      await update(id, o);
     } else {
-      await save(form);
+      await save(o);
     }
 
     navigate("/ordens");
