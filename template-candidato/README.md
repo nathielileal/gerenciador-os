@@ -29,8 +29,8 @@ Back-end:
 
    ### 👤 Gestão de Clientes
 
-   <img src="./src/assets/clientes.png.png" width="400" />
-   <img src="./src/assets/cliente-form.png.png" width="400" />
+   <img src="./src/assets/clientes.png" width="400" />
+   <img src="./src/assets/cliente-form.png" width="400" />
 
    - Listagem de clientes
    - Cadastro de clientes
@@ -38,8 +38,8 @@ Back-end:
 
    ### 🧾 Gestão de Ordens de Serviço
 
-   <img src="./src/assets/ordens.png.png" width="400" />
-   <img src="./src/assets/ordem-form.png.png" width="400" />
+   <img src="./src/assets/ordens.png" width="400" />
+   <img src="./src/assets/ordem-form.png" width="400" />
 
    - Listagem com paginação
    - Filtro por status
