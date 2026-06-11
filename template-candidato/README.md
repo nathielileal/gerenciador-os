@@ -19,6 +19,8 @@ Back-end:
 
    ### 📊 Dashboard
 
+   <img src="./src/assets/dashboard.png" width="400" />
+
    - Total de ordens de serviço
    - Faturamento total (status finalizado)
    - Taxa de conclusão (% finalizadas)
@@ -27,11 +29,17 @@ Back-end:
 
    ### 👤 Gestão de Clientes
 
+   <img src="./src/assets/clientes.png.png" width="400" />
+   <img src="./src/assets/cliente-form.png.png" width="400" />
+
    - Listagem de clientes
    - Cadastro de clientes
    - Validação básica de formulário (nome, email, telefone)
 
    ### 🧾 Gestão de Ordens de Serviço
+
+   <img src="./src/assets/ordens.png.png" width="400" />
+   <img src="./src/assets/ordem-form.png.png" width="400" />
 
    - Listagem com paginação
    - Filtro por status
